@@ -24,8 +24,6 @@ class MCServerStatus {
 			unset($h);
 			fclose($sock);
 
-			print_r($data);
-
 			if (sizeof($data) == 3) {
 				$this->motd = utf8_decode($data[0]);
 				$this->online_players = intval($data[1]);
