@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Minecraft Server Status</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    
+    .url {
+      font-size: 1.3em;
+    }
+    
+    .motd {
+      font-size: 1em;
+      color: gray;
+      font-style: italic;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .online {
+      background: green;
+    }
+    
+    .offline {
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Status<h2>
+  <div class="status">
+    <div class="status-indicator offline"></div>
+    <span class="url"><img src="loader.gif"></img></span>
+    <span class="motd"></span>
+    <span class="players"></span>
+  </div>
+  <button class="refresh">Refresh</button>
+  
+  <script src="http://zeptojs.com/zepto.js"></script>
+  <script>
+    $(function() {
+      var getStatus = function() {
+        //var url="85.114.152.200";
+        var url="engineers-assemble.net.tf";
+        $.getJSON("../../status.php?s="+url, function(data) {
+          console.log(data);
+          var server_url = data.server.url;
+          if(data.server.port != "25565") server_url += ':'+data.server.port;
+          $(".url").text(server_url);
+          if(data.online) {
+            $(".motd").text(data.motd);
+            $(".players").text(data.online_players+'/'+data.max_players);
+            $(".status-indicator").removeClass("offline").addClass("online");
+          } else {
+            $(".url").text(data.error+" ("+server_url+")");
+          }
+        });
+      }
+      
+      getStatus();
+      
+      $(".refresh").click(getStatus);
+    });
+  </script>
+</body>
+</html>
